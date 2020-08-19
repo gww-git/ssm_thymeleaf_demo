@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sz.dao.UserDao">
+    <resultMap id="userMap" type="user">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+    </resultMap>
+
+    <select id="ByUserAll" resultMap="userMap">
+        select * from user
+    </select>
+
+    <select id="ByUserId" parameterType="int" resultMap="userMap">
+        select * from user where id=#{id}
+    </select>
+
+    <insert id="insertUser" parameterType="user">
+        insert into user values(#{id},#{name})
+    </insert>
+
+    <update id="updateUser" parameterType="user" >
+        update user set name=#{name} where id=#{id}
+    </update>
+
+    <delete id="deleteUserId" parameterType="int">
+        delete from user where id=#{id}
+    </delete>
+
+
+    <!--一对多-->
+    <!--<resultMap id="UserRoleMap" type="user">-->
+        <!--<id column="uid" property="id"></id>-->
+        <!--<result column="uname" property="name"></result>-->
+        <!--<collection property="urole" ofType="role">-->
+            <!--<id column="rid" property="id"></id>-->
+            <!--<result column="rname" property="name"></result>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+
+    <!--<select id="ByUserRole" resultMap="UserRoleMap">-->
+        <!--SELECT u.id uid,u.name uname ,u.role urole,r.id rid ,r.name rname, r.user ruser FROM user u,role r WHERE uid=rid-->
+    <!--</select>-->
+
+    <resultMap id="UserRoleMap" type="User">
+        <id column="uid" property="id"></id>
+        <result column="uname" property="name"></result>
+        <association property="role" javaType="Role" column="uid">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+        </association>
+    </resultMap>
+
+    <select id="ByUserRole" resultMap="UserRoleMap">
+        SELECT u.id uid,u.name uname,r.* FROM USER u,role r WHERE u.id=r.id
+    </select>
+
+
+</mapper>
